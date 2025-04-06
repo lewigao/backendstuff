@@ -1,4 +1,5 @@
 //followed this tutorial: https://youtu.be/lY6icfhap2o?si=wbOJjT4LATkX4k1Y
+//helpful resource: https://expressjs.com/en/guide/writing-middleware.html#:~:text=Middleware%20functions%20are%20functions%20that,middleware%20succeeding%20the%20current%20middleware.
 
 //REMEMBER TO CALL next() IN ORDER TO EXIT OUT OF MIDDLEWARE STACK
 //OTHERWISE IT WILL HANG AND NEVER CONTINUE
@@ -33,7 +34,7 @@ app.get('/users', auth, (req, res) => {
     res.send('users page');
 });
 
-//FIRST MIDDLEWARE
+//FIRST MIDDLEWARE call
 app.use(logger);
 
 //next just calls the next function in our middleware stack
@@ -44,7 +45,7 @@ function logger(req, res, next){
 }
 //^^ this is the function that our middleware calls
 
-//SECOND MIDDLEWARE
+//SECOND MIDDLEWARE call
 app.use(logger);
 
 //middleware function
@@ -61,6 +62,9 @@ function auth(req, res, next){
         res.send('no auth');
     }
 }
+
+//THIRD MIDDLEWARE call
+app.use(logger);
 
 //copy of auth function
 function test(req, res, next){
@@ -82,7 +86,7 @@ function test(req, res, next){
 app.listen(3000);
 
 //going to the home, '/', directory
-    //logs "log" twice, because we have two middlewares after
+    //logs "log" twice, because we have two middleware calls after
 //if http://localhost:3000/users?admin=true: going to the users, '/users', directory
     //tries to access '/users', BUT encounters 'auth' argument, checks for 'req.query.admin', logs "auth", logs "users page", logs user admin prompt
 //if http://localhost:3000/users?admin=false or just ./users : going to the users, '/users', directory
